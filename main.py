@@ -1,14 +1,26 @@
+import re
+def normalize_phone(phone_number):
+    pattern = r"[\+,\d+]"
+    normalize_phone = re.findall(pattern, phone_number)
+    if len(normalize_phone) == 12:
+        normalize_phone.insert(0, '+')
+    elif len(normalize_phone) == 11:
+        normalize_phone.insert(0, '+3')
+    elif len(normalize_phone) == 10:
+        normalize_phone.insert(0, '+38')
+    normalize_phone = "".join(normalize_phone) 
+    return normalize_phone
 
-
-import random
-
-def get_numbers_ticket(min, max, quantity):
-    for num in [min, max, quantity]:
-        if not (1<= num <= 1000):
-            return []
-        random_numbers = random.sample(range(min, max+1), quantity)
-        return sorted(random_numbers)
-        
-            
-lottery_numbers = get_numbers_ticket(1, 70, 6)
-print(lottery_numbers)
+raw_numbers = [
+    "067\\t123 4567",
+    "(095) 234-5678\\n",
+    "+380 44 123 4567",
+    "380501234567",
+    "    +38(050)123-32-34",
+    "     0503451234",
+    "(050)8889900",
+    "38050-111-22-22",
+    "38050 111 22 11   ",
+]
+sanitized_numbers = [normalize_phone(num) for num in raw_numbers]
+print("Нормалізовані номери телефонів для SMS-розсилки:", sanitized_numbers)
